@@ -17,16 +17,11 @@ def add_item(title, description):
              VALUES (?, ?)"""
     db.execute(sql, [title, description])
 
-def get_items():
-    sql = """SELECT id, title
-             FROM Items"""
-    return db.query(sql)
-
 def get_item(item_id):
     sql = """SELECT id,
                     title,
-                    description,
                     type,
+                    description,
                     project
              FROM Items
              WHERE id = ?"""

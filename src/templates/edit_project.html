@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}Hankkeen muokkaus{% endblock %}
+
+{% block content %}
+<h2>{{ project.title }}</h2>
+<h3>Muokkaa hanketta</h3>
+<form action="/update_project" method="post">
+  <p>
+    <label for="title">Nimi</label>: <br />
+    <input type="text" name="title" id="title" value="{{ project.title }}" maxlength="50" required />
+  </p>
+  <p>
+    <label for="description">Kuvaus</label>: <br />
+    <textarea name="description" id="description" rows="8" cols="60" maxlength="1000" required>{{ project.description }}</textarea>
+  </p>
+  <input type="hidden" name="project_id" value="{{ project.id }}" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Päivitä" />
+</form>
+<p>
+  <a href="/project/{{ project.id }}">Takaisin kohteeseen</a>
+</p>
+{% endblock %}
