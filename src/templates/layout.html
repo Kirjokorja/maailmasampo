@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+  <h1>Maailmasampo</h1>
+
+  {% if session.user_id %}
+  <p>
+    Olet kirjautunut nimellä <a href="/user/{{ session.user_id }}">{{ session.username }}</a>
+  </p>
+  {% endif %}
+
+  <p>
+    <a href="/">Etusivu</a> |
+    <a href="/find_item">Hae kohdetta</a> |
+  {% if session.user_id %}
+    <a href="/new_item">Luo kohde</a> |
+    <a href="/logout">Kirjaudu ulos</a>
+  {% else %}
+    <a href="/login">Kirjaudu sisään</a> |
+    <a href="/register">Luo tunnus</a>
+  {% endif %}
+  </p>
+
+  {% for message in get_flashed_messages() %}
+    {{ message }}
+  {% endfor %}
+
+  {% block content %}{% endblock %}  
+</body>
+
+</html>

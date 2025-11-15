@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}Kohteen luonti{% endblock %}
+
+{% block content %}
+<h2>Luo kohde</h2>
+<form action="/create_item" method="post">
+  <p>
+    <label for="title">Otsikko:</label> <br />
+    <input type="text" name="title" id="title" maxlength="50" required />
+  </p>
+  <p>
+    <label for="description">Kuvaus</label>: <br />
+    <textarea name="description" id="description" rows="8" cols="60" maxlength="1000" required></textarea>
+  </p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Luo kohde" />
+</form>
+{% endblock %}
