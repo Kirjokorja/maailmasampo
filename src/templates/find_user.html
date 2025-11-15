@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}Käyttäjät{% endblock %}
+
+{% block content %}
+<h2>Etsi käyttäjää</h2>
+
+<form action="/find_user" method="get">
+  <p>
+    <label for="query">Hakusana</label>:
+    <input type="text" name="query" id="query" value="{{ query }}">
+  </p>
+  <input type="submit" value="Lähetä">
+</form>
+
+{% if query %}
+<h3>Tulokset</h3>
+<ul>
+  {% for user in results %}
+  <li><a href="/user/{{user.id}}">{{user.id}}</a> | {{user.username}} | {{user.created}}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

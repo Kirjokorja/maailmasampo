@@ -18,6 +18,11 @@ def check_login(username, password):
         return user_id
     else:
         return None
+    
+def get_user(user_id):
+    sql = "SELECT id, username, created FROM Users WHERE id = ?"
+    result = db.query(sql, [user_id])
+    return result[0] if result else None
 
 def get_all_users():
     sql = """SELECT id, username, created 
@@ -32,8 +37,3 @@ def find_users(query):
             ORDER BY id DESC"""
     like = "%" + query + "%"
     return db.query(sql, [like])
-
-def get_all_users():
-    sql = "SELECT username FROM users"
-    result = db.query(sql)
-    return result[0] if result else None
