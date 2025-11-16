@@ -5,7 +5,7 @@ Maailmasampo on tietokantasovellus, joka on tarkoitettu maailmanrakennus- ja roo
 1. Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
 2. Käyttäjä pystyy kirjautumaan ulos sovelluksesta.
 3. Käyttäjä pystyy luomaan uuden hankkeen eli pääasiallisen tietokohteen.
-4. Tietokannassa on maailma -luokka, jonka käyttäjä pystyy valitsemaan hankkeelle.
+4. Tietokannassa on maailma-luokka hankkeelle.
 5. Käyttäjä pystyy poistamaan luomansa hankkeen ja kaikki sen toissijaiset tietokohteet.
 6. Käyttäjä pystyy muokkaamaan luomaansa hanketta ja kaikkia sen toissijaisia tietokohteita.
 7. Käyttäjä pystyy antamaan oikeuksia muille käyttäjille luomaansa hankkeeseen.
@@ -28,4 +28,73 @@ Maailmasampo on tietokantasovellus, joka on tarkoitettu maailmanrakennus- ja roo
 13. Käyttäjä pystyy liittämään toissijaisia tietokohteita omiinsa sekä muiden käyttäjien toissijaisiin tietokohteisiin hankkeessa, johon hänellä on muokkaamisoikeudet.
 14. Käyttäjä näkee sovellukseen luodut hankkeet ja niihin lisätyt toissijaiset tietokohteet. Käyttäjä näkee sekä itse lisäämänsä, että muiden käyttäjien lisäämät hankkeet ja toisssijaiset tietokohteet.
 15. Käyttäjä pystyy etsimään tietokohteita hakusanalla tai tietokohteen luokalla. Käyttäjä pystyy hakemaan sekä itse lisäämiään että muiden käyttäjien lisäämiä tietokohteita.
-16. Sovelluksessa on käyttäjäsivut, jotka näyttävät jokaisesta käyttäjästä tämän tunnuksen, tunnuksen luontiajankohdan, käyttöoikeudet, sisään- ja uloskirjautumisajankohdat, käyttäjän luomat hankkeet ja lisäämät tietokohteet sekä näiden lisäys-, poisto- ja muokkaamisajankohdat.
+16. Sovelluksessa on käyttäjäsivut, jotka näyttävät jokaisesta käyttäjästä tämän tunnuksen, tunnuksen luontiajankohdan, käyttöoikeudet.
+17. Käyttäjän sisään- ja uloskirjautumisajankohtia, käyttäjän luomaia hankkeita ja lisäämiä tietokohteita sekä näiden lisäys-, poisto- ja muokkaamisajankohtia voi hakea päivämäärällä, käyttäjällä, toiminnolla tai kohteella.
+
+## Sovelluksen asennus
+
+Varmista, että sinulla on python 3.14 tai suurempi versio asennettuna koneellasi.
+Hae repo koneellesi.
+
+### 1. Poetrylla
+
+Varmista, että sinulla on Poetry 2.0.0 tai suurempi versio asennettuna koneellasi.
+Asenna se repon juurihakemistossa komennolla*:
+
+```
+poetry install
+```
+Komento asentaa samalla kaikki tarvittavat riippuvuudet.
+
+Mene juurihakemiston alta löytyvään src-hakemistoon. Vie sinne sqlite-tietokannan ohjelmatiedostot.
+Alusta tietokanta src-hakemistoon komennoilla**:
+
+```
+sqlite3 database.db < schema.sql
+sqlite3 database.db < init.sql
+```
+
+Nyt voit käynnistää sovelluksen komennolla:
+
+```
+flask run
+```
+
+### 2. Pipillä
+
+Asenna `flask`-kirjasto repon juurihakemistossa komennolla*:
+
+```
+pip install flask
+```
+
+Mene juurihakemiston alta löytyvään src-hakemistoon. Vie sinne sqlite-tietokannan ohjelmatiedostot.
+Alusta tietokanta src-hakemistoon komennoilla**:
+
+```
+sqlite3 database.db < schema.sql
+sqlite3 database.db < init.sql
+```
+
+Nyt voit käynnistää sovelluksen komennolla:
+
+```
+flask run
+```
+
+*Jos käytät Windowsia, suosittelen käyttämään pääasiallisesti PowerShell 7:n komentokuorta.
+PowerShell 7 pitää asentaa kokemukseni mukaan Windowsille erikseen.
+
+**Jos käytät Windowsia, joudut todennäköisesti käyttämään Windowsin komentokuorta PowerShell 7:n komentokuoren sijaan.
+En ole itse löytänyt komentomuotoa, jolla sqlite3:n komennot toimisivat PowerShell 7:llä.
+
+## Ensimmäisen sovituksen toiminta
+
+1. Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
+2. Käyttäjä pystyy kirjautumaan ulos sovelluksesta.
+3. Käyttäjä pystyy luomaan uuden hankkeen eli pääasiallisen tietokohteen.
+4. Käyttäjä pystyy valitsemaan maailma-luokan hankkeelle.
+5. Käyttäjä pystyy muokkaamaan ja poistamaan hankkeita.
+7. Käyttäjä pystyy luomaan, muokkaamaan ja poistamaan toissijaisia tietokohteita.
+8. Käyttäjä pystyy hakemaan hankkeita ja toissijaisia tietokohteita hakusanalla.
+9. Käyttäjä pystyy hakemaan käyttäjiä hakusanalla.
