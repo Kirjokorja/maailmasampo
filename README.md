@@ -33,7 +33,7 @@ Maailmasampo on tietokantasovellus, joka on tarkoitettu maailmanrakennus- ja roo
 
 ## Sovelluksen asennus
 
-Varmista, että sinulla on python 3.14 tai suurempi versio asennettuna koneellasi.
+Varmista, että sinulla on `Python 3.14` tai suurempi versio asennettuna koneellasi.
 Hae repo koneellesi.
 
 ### 1. Poetrylla
