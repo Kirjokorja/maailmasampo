@@ -85,7 +85,7 @@ flask run
 *Jos käytät `Windows`-käyttöjärjestelmää, suosittelen käyttämään pääasiallisesti `PowerShell 7`:n komentokuorta.
 `PowerShell 7` pitää asentaa kokemukseni mukaan Windowsille erikseen.
 
-**Jos käytät `Windows`-käyttöjärjestelmää, joudut todennäköisesti käyttämään Windowsin komentokuorta `PowerShell 7``:n komentokuoren sijaan.
+**Jos käytät `Windows`-käyttöjärjestelmää, joudut todennäköisesti käyttämään Windowsin komentokuorta `PowerShell 7`:n komentokuoren sijaan.
 En ole itse löytänyt komentomuotoa, jolla `sqlite3`:n komennot toimisivat `PowerShell 7`:llä.
 
 ## Ensimmäisen sovituksen toiminta
