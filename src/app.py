@@ -5,6 +5,7 @@ from flask import abort, flash, redirect, render_template, request, session
 
 import db
 import config
+import classes
 import users
 import projects
 import items
@@ -33,6 +34,8 @@ def login():
         password = request.form["password"]
         user_id = users.check_login(username, password)
         if user_id:
+            action_id = classes.get_class('Käyttäjätoiminto', 'sisäänkirjautuminen')
+            users.log_user(user_id, action_id)
             session["user_id"] = user_id
             session["username"] = username
             session["csrf_token"] = secrets.token_hex(16)
@@ -44,8 +47,11 @@ def login():
 @app.route("/logout")
 def logout():
     if "user_id" in session:
+        user_id = session["user_id"]
         del session["user_id"]
         del session["username"]
+        action_id = classes.get_class('Käyttäjätoiminto', 'uloskirjautuminen')
+        users.log_user(user_id, action_id)
     return redirect("/")
 
 @app.route("/register")
@@ -90,8 +96,8 @@ def find_user():
 @app.route("/new_project")
 def new_project():
     require_login()
-    classes = projects.get_all_classes()
-    return render_template("new_project.html", classes=classes)
+    all_classes = classes.get_all_classes('Hanke')
+    return render_template("new_project.html", all_classes=all_classes)
 
 @app.route("/create_project", methods=["POST"])
 def create_project():
@@ -106,10 +112,15 @@ def create_project():
         abort(403)
 
     class_id = int(request.form["class"])
-    all_classes = projects.get_all_classes().keys()
+    all_classes = classes.get_all_classes('Hanke').keys()
+    if not all_classes  or len(all_classes) < 1:
+        abort(404)
     if class_id not in all_classes:
         abort(403)
     project_id = projects.add_project(title, description, session["user_id"], class_id)
+    if not project_id:
+        flash("VIRHE: hanketta ei voitu luoda")
+        return redirect("/new_project")
     return redirect("/project/" + str(project_id))
 
 @app.route("/project/<int:project_id>")
@@ -118,7 +129,7 @@ def show_project(project_id):
     project = projects.get_project(project_id)
     if not project:
         abort(404)
-    class_value = projects.get_class_value(project["type"])
+    class_value = classes.get_class_value(project["type"])
     return render_template("show_project.html", project=project,
                            class_value = class_value[0]["value"])
 

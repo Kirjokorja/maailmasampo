@@ -1,25 +1,8 @@
 import db
-
-def get_all_classes():
-    sql = """SELECT id, value FROM Classes
-            WHERE title = ?
-            ORDER BY id"""
-    result = db.query(sql, ['Hanke'])
-    classes = {}
-    for class_id, class_value in result:
-        classes[class_id] = [class_value]
-    return classes
-
-def get_class_value(class_id):
-    sql = """SELECT id, value FROM Classes
-            WHERE id = ?"""
-    result = db.query(sql, [class_id])
-    return result
+import classes
 
 def add_project(title, description, user_id, class_id):
-    sql_classes = "SELECT id FROM Classes WHERE title = ? AND value = ?"
-    action = db.query(sql_classes, ["Hanketoiminto", "hankkeen luominen"])
-    action_id = action[0]["id"]
+    action_id = classes.get_class('Hanketoiminto','hankkeen luominen')
     sql_projects = """INSERT INTO Projects (title, type, description, owner)
                     VALUES (?, ?, ?, ?)"""
     sql_log = "INSERT INTO Log_projects (actor, action, project_id) VALUES (?, ?, ?)"

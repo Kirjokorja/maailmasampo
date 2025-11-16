@@ -1,12 +1,15 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import db
+import classes
+
+def log_user(user_id, action_id):
+    sql_log = "INSERT INTO Log_users (actor, action) VALUES (?, ?)"
+    db.execute(sql_log, [user_id, action_id])
 
 def create_user(username, password):
     password_hash = generate_password_hash(password)
-    sql_classes = "SELECT id FROM Classes WHERE title = ? AND value = ?"
-    action = db.query(sql_classes, ["Käyttäjätoiminto", "käyttäjän luominen"])
-    action_id = action[0]["id"]
+    action_id = classes.get_class('Käyttäjätoiminto', 'käyttäjän luominen')
     sql_users = "INSERT INTO Users (username, password_hash) VALUES (?, ?)"
     sql_log = "INSERT INTO Log_users (actor, action) VALUES (?, ?)"
     con = db.get_connection()
