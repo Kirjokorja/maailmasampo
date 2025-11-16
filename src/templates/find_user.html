@@ -15,10 +15,23 @@
 
 {% if query %}
 <h3>Tulokset</h3>
-<ul>
-  {% for user in results %}
-  <li><a href="/user/{{user.id}}">{{user.id}}</a> | {{user.username}} | {{user.created}}</li>
-  {% endfor %}
-</ul>
+<table>
+    <thead>
+        <tr>
+            <th>Tunnusluku</th>
+            <th>Nimimerkki</th>
+            <th>Luotu</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+        {% for user in results %}
+        <tr>
+            <td><a href="/user/{{user.id}}">{{user.id}}</a></td>
+            <td>{{user.username}}</td>
+            <td>{{user.created}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endif %}
 {% endblock %}

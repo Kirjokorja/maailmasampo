@@ -1,8 +1,7 @@
 CREATE TABLE Users (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE,
-    password_hash TEXT,
-    created DATETIME
+    password_hash TEXT
 );
 
 CREATE TABLE Projects (
@@ -30,23 +29,38 @@ CREATE TABLE Subitems (
 );
 
 CREATE TABLE Members (
+    id INTEGER PRIMARY KEY,
     project INTEGER REFERENCES Projects,
     member INTEGER REFERENCES Users
 );
 
-CREATE TABLE Log (
-    time DATETIME,
+CREATE TABLE Log_users (
+    id INTEGER PRIMARY KEY,
+    time TEXT DEFAULT CURRENT_TIMESTAMP,
+    actor INTEGER REFERENCES Users,
+    action INTEGER REFERENCES Classes
+);
+
+CREATE TABLE Log_projects (
+    id INTEGER PRIMARY KEY,
+    time TEXT DEFAULT CURRENT_TIMESTAMP,
     actor INTEGER REFERENCES Users,
     action INTEGER REFERENCES Classes,
-    data_type TEXT,
-    data_id INTEGER
+    project_id INTEGER REFERENCES Projects,
+    comment TEXT
+);
+
+CREATE TABLE Log_items (
+    id INTEGER PRIMARY KEY,
+    time TEXT DEFAULT CURRENT_TIMESTAMP,
+    actor INTEGER REFERENCES Users,
+    action INTEGER REFERENCES Classes,
+    item_id INTEGER REFERENCES Items,
+    comment TEXT
 );
 
 CREATE TABLE Classes (
     id INTEGER PRIMARY KEY,
-    title TEXT, --'hanke', 'toiminto', 'luokka'
-    value TEXT --'hanke'{'maailma'}, 'toiminto'{'sisäänkirjaus', 'uloskirjaus', 'käyttäjän luonti', 'käyttäjän hävitys', 
-                -- 'hankkeen luonti', 'hankkeen haltijan muutos', 'hankkeen muokkaus', 'hankkeen hävittäminen', 'tietokohteen luominen', 
-                -- 'tietokohteen hävittäminen', 'tietokohteen muokkaus', 'käyttäjän lisäys hankkeeseen', 'käyttäjän poisto hankkeeesta', '},
-                -- 'luokka' {'alue', 'ympäristö', 'luonnonlaki', 'paikka', 'kulttuuri', 'yhteisö', 'laji', 'olento', 'henkilö', 'esine', 'menetelmä'}
+    title TEXT,
+    value TEXT
 );

@@ -9,7 +9,8 @@
   <a href="/remove_project/{{ project.id }}">Poista</a>
 </p>
 <p>
-  Kuvaus: {{ project.description }}
-  Haltija: {{ project.owner }}
+  Kuvaus: {{ project.description }}<br>
+  Luokka: {{class_value}}<br>
+  Haltija: {{ project.owner_name }}
 </p>
 {% endblock %}

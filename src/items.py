@@ -6,9 +6,7 @@ def get_all_classes():
 
     classes = {}
     for title, value in result:
-        classes[title] = []
-    for title, value in result:
-        classes[title].append(value)
+        classes[title] = [value]
 
     return classes
 
@@ -18,13 +16,14 @@ def add_item(title, description):
     db.execute(sql, [title, description])
 
 def get_item(item_id):
-    sql = """SELECT id,
-                    title,
-                    type,
-                    description,
-                    project
-             FROM Items
-             WHERE id = ?"""
+    sql = """SELECT Items.id,
+                    Items.title,
+                    Items.type,
+                    Items.description,
+                    Projects.id project_id
+                    Projects.title project_title
+             FROM Items, Projects
+             WHERE Items.project = Projects.id AND Items.id = ?"""
     result = db.query(sql, [item_id])
     return result[0] if result else None
 

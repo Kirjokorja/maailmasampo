@@ -13,6 +13,17 @@
     <label for="description">Kuvaus</label>: <br />
     <textarea name="description" id="description" rows="8" cols="60" maxlength="1000" required></textarea>
   </p>
+  {% for class in classes %}
+  <p>
+    <label for="class">Luokka</label>: <br />
+    <select name="class" id="class" required>
+      <option value="">(valitse)</option>
+    {% for option in classes[class] %}
+      <option value="{{ class }}">{{ option }}</option>
+    {% endfor %}
+    </select>
+  </p>
+  {% endfor %}
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Luo hanke" />
 </form>

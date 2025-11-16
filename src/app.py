@@ -10,7 +10,7 @@ import projects
 import items
 
 app = Flask(__name__)
-app.secret_key = config.secret_key
+app.secret_key = config.SECRET_KEY
 
 def check_csrf():
     if "csrf_token" not in request.form:
@@ -28,8 +28,6 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "GET":
-        return render_template("login.html")
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -39,9 +37,9 @@ def login():
             session["username"] = username
             session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
-        else:
-            flash("VIRHE: virheellinen tunnus tai salasana")
-            return redirect("/login")
+        flash("VIRHE: virheellinen tunnus tai salasana")
+        return redirect("/login")
+    return render_template("login.html")
 
 @app.route("/logout")
 def logout():
@@ -78,12 +76,6 @@ def show_user(user_id):
         abort(404)
     return render_template("show_user.html", user=user)
 
-@app.route("/users")
-def all_users():
-    require_login()
-    results = users.get_all_users()
-    return render_template("users.html", results=results)
-
 @app.route("/find_user")
 def find_user():
     require_login()
@@ -98,7 +90,8 @@ def find_user():
 @app.route("/new_project")
 def new_project():
     require_login()
-    return render_template("new_project.html")
+    classes = projects.get_all_classes()
+    return render_template("new_project.html", classes=classes)
 
 @app.route("/create_project", methods=["POST"])
 def create_project():
@@ -111,8 +104,12 @@ def create_project():
     description = request.form["description"]
     if not description or len(description) > 1000:
         abort(403)
-    projects.add_project(title, description)
-    project_id = db.last_insert_id()
+
+    class_id = int(request.form["class"])
+    all_classes = projects.get_all_classes().keys()
+    if class_id not in all_classes:
+        abort(403)
+    project_id = projects.add_project(title, description, session["user_id"], class_id)
     return redirect("/project/" + str(project_id))
 
 @app.route("/project/<int:project_id>")
@@ -121,7 +118,9 @@ def show_project(project_id):
     project = projects.get_project(project_id)
     if not project:
         abort(404)
-    return render_template("show_project.html", project=project)
+    class_value = projects.get_class_value(project["type"])
+    return render_template("show_project.html", project=project,
+                           class_value = class_value[0]["value"])
 
 @app.route("/find_project")
 def find_project():
@@ -167,15 +166,13 @@ def remove_project(project_id):
     project = projects.get_project(project_id)
     if not project:
         abort(404)
-    if request.method == "GET":
-        return render_template("remove_project.html", project=project)
     if request.method == "POST":
         check_csrf()
         if "remove" in request.form:
             projects.remove_project(project_id)
             return redirect("/")
-        else:
-            return redirect("/project/" + str(project_id))
+        return redirect("/project/" + str(project_id))
+    return render_template("remove_project.html", project=project)
 
 @app.route("/new_item")
 def new_item():
@@ -248,12 +245,10 @@ def remove_item(item_id):
     item = items.get_item(item_id)
     if not item:
         abort(404)
-    if request.method == "GET":
-        return render_template("remove_item.html", item=item)
     if request.method == "POST":
         check_csrf()
         if "remove" in request.form:
             items.remove_item(item_id)
             return redirect("/")
-        else:
-            return redirect("/item/" + str(item_id))
+        return redirect("/item/" + str(item_id))
+    return render_template("remove_item.html", item=item)
