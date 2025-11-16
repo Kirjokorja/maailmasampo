@@ -9,11 +9,9 @@ def get_item(item_id):
     sql = """SELECT Items.id,
                     Items.title,
                     Items.type,
-                    Items.description,
-                    Projects.id project_id
-                    Projects.title project_title
-             FROM Items, Projects
-             WHERE Items.project = Projects.id AND Items.id = ?"""
+                    Items.description
+             FROM Items
+             WHERE Items.id = ?"""
     result = db.query(sql, [item_id])
     return result[0] if result else None
 

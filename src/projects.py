@@ -5,12 +5,13 @@ def add_project(title, description, user_id, class_id):
     action_id = classes.get_class('Hanketoiminto','hankkeen luominen')
     sql_projects = """INSERT INTO Projects (title, type, description, owner)
                     VALUES (?, ?, ?, ?)"""
-    sql_log = "INSERT INTO Log_projects (actor, action, project_id) VALUES (?, ?, ?)"
+    sql_log = "INSERT INTO Log_projects (actor, action, project_id, comment) VALUES (?, ?, ?, ?)"
     con = db.get_connection()
     con.execute("BEGIN")
     result = con.execute(sql_projects, [title, class_id, description, user_id])
     new_project_id = result.lastrowid
-    con.execute(sql_log, [user_id, action_id, new_project_id])
+    comment = f"Hankkeen tunnus tietokannassa: {new_project_id}\nHankkeen nimi: {title}"
+    con.execute(sql_log, [user_id, action_id, new_project_id, comment])
     con.execute("COMMIT")
     con.close()
     return new_project_id
@@ -44,3 +45,7 @@ def find_projects(query):
              ORDER BY id DESC"""
     like = "%" + query + "%"
     return db.query(sql, [like, like])
+
+def get_project_log(project_id):
+    sql = "SELECT * FROM Log_projects WHERE project_id = ?"
+    return db.query(sql, [project_id])

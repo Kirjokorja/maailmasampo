@@ -17,7 +17,7 @@ CREATE TABLE Items (
     title TEXT,
     type INTEGER REFERENCES Classes,
     description TEXT,
-    project INTEGER REFERENCES Projects
+    project INTEGER REFERENCES Projects ON DELETE CASCADE
 );
 
 CREATE TABLE Subitems (
@@ -30,7 +30,7 @@ CREATE TABLE Subitems (
 
 CREATE TABLE Members (
     id INTEGER PRIMARY KEY,
-    project INTEGER REFERENCES Projects,
+    project INTEGER REFERENCES Projects ON DELETE CASCADE,
     member INTEGER REFERENCES Users
 );
 
@@ -38,7 +38,8 @@ CREATE TABLE Log_users (
     id INTEGER PRIMARY KEY,
     time TEXT DEFAULT CURRENT_TIMESTAMP,
     actor INTEGER REFERENCES Users,
-    action INTEGER REFERENCES Classes
+    action INTEGER REFERENCES Classes,
+    comment TEXT
 );
 
 CREATE TABLE Log_projects (
@@ -46,7 +47,7 @@ CREATE TABLE Log_projects (
     time TEXT DEFAULT CURRENT_TIMESTAMP,
     actor INTEGER REFERENCES Users,
     action INTEGER REFERENCES Classes,
-    project_id INTEGER REFERENCES Projects,
+    project_id INTEGER REFERENCES Projects ON DELETE SET NULL,
     comment TEXT
 );
 
