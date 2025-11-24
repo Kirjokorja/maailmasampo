@@ -33,12 +33,12 @@ Maailmasampo on tietokantasovellus, joka on tarkoitettu maailmanrakennus- ja roo
 
 ## Sovelluksen asennus
 
-Varmista, että sinulla on python 3.14 tai suurempi versio asennettuna koneellasi.
+Varmista, että sinulla on `Python 3.14` tai suurempi versio asennettuna koneellasi.
 Hae repo koneellesi.
 
 ### 1. Poetrylla
 
-Varmista, että sinulla on Poetry 2.0.0 tai suurempi versio asennettuna koneellasi.
+Varmista, että sinulla on `Poetry 2.0.0` tai suurempi versio asennettuna koneellasi.
 Asenna se repon juurihakemistossa komennolla*:
 
 ```
@@ -46,8 +46,8 @@ poetry install
 ```
 Komento asentaa samalla kaikki tarvittavat riippuvuudet.
 
-Mene juurihakemiston alta löytyvään src-hakemistoon. Vie sinne sqlite-tietokannan ohjelmatiedostot.
-Alusta tietokanta src-hakemistoon komennoilla**:
+Mene juurihakemiston alta löytyvään `src`-hakemistoon. Vie sinne `sqlite`-tietokannan ohjelmatiedostot.
+Alusta tietokanta `src`-hakemistoon komennoilla**:
 
 ```
 sqlite3 database.db < schema.sql
@@ -68,8 +68,8 @@ Asenna `flask`-kirjasto repon juurihakemistossa komennolla*:
 pip install flask
 ```
 
-Mene juurihakemiston alta löytyvään src-hakemistoon. Vie sinne sqlite-tietokannan ohjelmatiedostot.
-Alusta tietokanta src-hakemistoon komennoilla**:
+Mene juurihakemiston alta löytyvään `src`-hakemistoon. Vie sinne `sqlite`-tietokannan ohjelmatiedostot.
+Alusta tietokanta `src`-hakemistoon komennoilla**:
 
 ```
 sqlite3 database.db < schema.sql
@@ -82,11 +82,11 @@ Nyt voit käynnistää sovelluksen komennolla:
 flask run
 ```
 
-*Jos käytät Windowsia, suosittelen käyttämään pääasiallisesti PowerShell 7:n komentokuorta.
-PowerShell 7 pitää asentaa kokemukseni mukaan Windowsille erikseen.
+*Jos käytät `Windows`-käyttöjärjestelmää, suosittelen käyttämään pääasiallisesti `PowerShell 7`:n komentokuorta.
+`PowerShell 7` pitää asentaa kokemukseni mukaan `Windows`-järjestelmälle erikseen.
 
-**Jos käytät Windowsia, joudut todennäköisesti käyttämään Windowsin komentokuorta PowerShell 7:n komentokuoren sijaan.
-En ole itse löytänyt komentomuotoa, jolla sqlite3:n komennot toimisivat PowerShell 7:llä.
+**Jos käytät `Windows`-käyttöjärjestelmää, joudut todennäköisesti käyttämään `Windows`-komentokuorta `PowerShell 7`:n komentokuoren sijaan.
+En ole itse löytänyt komentomuotoa, jolla `sqlite3`:n komennot toimisivat `PowerShell 7`:llä.
 
 ## Ensimmäisen sovituksen toiminta
 
