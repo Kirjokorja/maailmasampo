@@ -12,8 +12,22 @@
   <p>
     Olet kirjautunut nimellä <a href="/user/{{ session.user_id }}">{{ session.username }}</a>
   </p>
-  {% endif %}
+  {% else %}
+  <h2>Kirjaudu sisään</h2>
 
+  <form action="/login" method="post">
+    <p>
+      <label for="username">Tunnus</label>: <br />
+      <input type="text" name="username" id="username" />
+    </p>
+    <p>
+      <label for="password">Salasana</label>: <br />
+      <input type="password" name="password" id="password" />
+    </p>
+    <input type="submit" value="Kirjaudu" />
+  </form>
+  {% endif %}
+  
   <p>
     <a href="/">Etusivu</a> |
   {% if session.user_id %}
