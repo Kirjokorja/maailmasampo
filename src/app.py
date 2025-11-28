@@ -106,17 +106,17 @@ def create_project():
 
     title = request.form["title"]
     if not title or len(title) > 50:
-        abort(403)
+        abort(400)
     description = request.form["description"]
     if not description or len(description) > 1000:
-        abort(403)
+        abort(400)
 
     class_id = int(request.form["class"])
     all_classes = classes.get_all_classes('Hanke').keys()
-    if not all_classes  or len(all_classes) < 1:
+    if not all_classes   or len(all_classes) < 1:
         abort(404)
     if class_id not in all_classes:
-        abort(403)
+        abort(400)
     project_id = projects.add_project(title, description, session["user_id"], class_id)
     if not project_id:
         flash("VIRHE: hanketta ei voitu luoda")
@@ -164,10 +164,10 @@ def update_project():
         abort(404)
     title = request.form["title"]
     if not title or len(title) > 50:
-        abort(403)
+        abort(400)
     description = request.form["description"]
     if not description or len(description) > 1000:
-        abort(403)
+        abort(400)
     projects.update_project(project_id, title, description)
     return redirect("/project/" + str(project_id))
 
@@ -197,10 +197,10 @@ def create_item():
 
     title = request.form["title"]
     if not title or len(title) > 50:
-        abort(403)
+        abort(400)
     description = request.form["description"]
     if not description or len(description) > 1000:
-        abort(403)
+        abort(400)
     items.add_item(title, description)
     item_id = db.last_insert_id()
     return redirect("/item/" + str(item_id))
@@ -243,10 +243,10 @@ def update_item():
         abort(404)
     title = request.form["title"]
     if not title or len(title) > 50:
-        abort(403)
+        abort(400)
     description = request.form["description"]
     if not description or len(description) > 1000:
-        abort(403)
+        abort(400)
     items.update_item(item_id, title, description)
     return redirect("/item/" + str(item_id))
 
