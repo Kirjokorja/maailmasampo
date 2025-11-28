@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <h2>Luo tunnus</h2>
-</head>
+  <head>
+    <h2>Luo tunnus</h2>
+  </head>
 
-<body></body>
-<form action="/create_user" method="post">
-  <p>
-    Tunnus: <br />
-    <input type="text" name="username" />
-  </p>
-  <p>
-    Salasana: <br />
-    <input type="password" name="password" />
-  </p>
-  <p>
-    Salasana uudestaan: <br />
-    <input type="password" name="password_confirm" />
-  </p>
-  <input type="submit" value="Luo tunnus" />
-  </form>
-</body>
+  {% for message in get_flashed_messages() %}
+      {{ message }}
+  {% endfor %}
+
+  <body></body>
+  <form action="/create_user" method="post">
+    <p>
+      Tunnus: <br />
+      <input type="text" name="username" />
+    </p>
+    <p>
+      Salasana: <br />
+      <input type="password" name="password" />
+    </p>
+    <p>
+      Salasana uudestaan: <br />
+      <input type="password" name="password_confirm" />
+    </p>
+    <input type="submit" value="Luo tunnus" />
+    </form>
+  </body>
 </html>

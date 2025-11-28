@@ -1,4 +1,3 @@
-import sqlite3
 import secrets
 from flask import Flask
 from flask import abort, flash, redirect, render_template, request, session
@@ -9,6 +8,7 @@ import classes
 import users
 import projects
 import items
+import exceptions
 
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
@@ -68,7 +68,7 @@ def create_user():
         return redirect("/register")
     try:
         users.create_user(username, password)
-    except sqlite3.IntegrityError:
+    except exceptions.UserAlreadyExists:
         flash("VIRHE: tunnus on jo varattu")
         return redirect("/register")
     flash("Tunnus luotu")

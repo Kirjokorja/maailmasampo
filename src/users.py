@@ -2,12 +2,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 import db
 import classes
+import exceptions
 
 def log_user(user_id, action_id):
     sql_log = "INSERT INTO Log_users (actor, action) VALUES (?, ?)"
     db.execute(sql_log, [user_id, action_id])
 
 def create_user(username, password):
+    user_check_query = "SELECT username FROM Users WHERE username = ?"
+    user_check = db.query(user_check_query, [username])
+    print(user_check)
+    if user_check:
+        raise exceptions.UserAlreadyExists(f"Database found user {user_check[0]}.")
     password_hash = generate_password_hash(password)
     action_id = classes.get_class('Käyttäjätoiminto', 'käyttäjän luominen')
     sql_users = "INSERT INTO Users (username, password_hash) VALUES (?, ?)"
