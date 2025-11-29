@@ -3,22 +3,22 @@
 {% block title %}Hankehaku{% endblock %}
 
 {% block content %}
-<h2>Hae hanketta</h2>
+  <h2>Hae hanketta</h2>
 
-<form action="/find_project" method="get">
-  <p>
-    <label for="query">Hakusana</label>:
-    <input type="text" name="query" id="query" value="{{ query }}">
-  </p>
-  <input type="submit" value="Lähetä">
-</form>
+  <form action="/find-project" method="get">
+    <p>
+      <label for="query">Hakusana</label>:
+      <input type="text" name="query" id="query" value="{{ query }}">
+    </p>
+    <input type="submit" value="Lähetä">
+  </form>
 
-{% if query %}
-<h3>Tulokset</h3>
-<ul>
-  {% for project in results %}
-  <li><a href="/project/{{ project.id }}">{{ project.title }}</a></li>
-  {% endfor %}
-</ul>
-{% endif %}
+  {% if query %}
+    <h3>Tulokset</h3>
+    <ul>
+      {% for project in results %}
+        <li><a href="/project/{{ project.id }}">{{ project.title }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 {% endblock %}

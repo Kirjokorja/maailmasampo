@@ -56,7 +56,7 @@ CREATE TABLE Log_items (
     time TEXT DEFAULT CURRENT_TIMESTAMP,
     actor INTEGER REFERENCES Users,
     action INTEGER REFERENCES Classes,
-    item_id INTEGER REFERENCES Items,
+    item_id INTEGER REFERENCES Items ON DELETE SET NULL,
     comment TEXT
 );
 

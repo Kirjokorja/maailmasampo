@@ -3,14 +3,15 @@
 {% block title %}Hanke{% endblock %}
 
 {% block content %}
-<h2>{{ project.title }}</h2>
-<p>
-  <a href="/edit_project/{{ project.id }}">Muokkaa</a> |
-  <a href="/remove_project/{{ project.id }}">Poista</a>
-</p>
-<p>
-  Kuvaus: {{ project.description }}<br>
-  Luokka: {{class_value}}<br>
-  Haltija: {{ project.owner_name }}
-</p>
+  <h2>{{ project.title }}</h2>
+  <p>
+    <a href="/edit-project/{{ project.id }}">Muokkaa</a> |
+    <a href="/remove-project/{{ project.id }}">Poista</a> |
+    <a href="/project/{{ project.id }}/new-item">Uusi kohde</a>
+  </p>
+  <p>
+    Kuvaus: {{ project.description }}<br>
+    Luokka: {{ class_value }}<br>
+    Haltija: <a href="/user/{{ project.owner_id }}">{{ project.owner_name }}</a>
+  </p>
 {% endblock %}

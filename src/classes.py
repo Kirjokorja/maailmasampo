@@ -7,7 +7,7 @@ def get_all_classes(class_title):
     result = db.query(sql, [class_title])
     classes = {}
     for class_id, class_value in result:
-        classes[class_id] = [class_value]
+        classes[class_id] = class_value
     return classes
 
 def get_class_value(class_id):

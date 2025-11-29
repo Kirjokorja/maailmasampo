@@ -3,28 +3,26 @@
 {% block title %}Hankkeen luonti{% endblock %}
 
 {% block content %}
-<h2>Luo hanke</h2>
-<form action="/create_project" method="post">
-  <p>
-    <label for="title">Otsikko:</label> <br />
-    <input type="text" name="title" id="title" maxlength="50" required />
-  </p>
-  <p>
-    <label for="description">Kuvaus</label>: <br />
-    <textarea name="description" id="description" rows="8" cols="60" maxlength="1000" required></textarea>
-  </p>
-  {% for class in all_classes %}
-  <p>
-    <label for="class">Luokka</label>: <br />
-    <select name="class" id="class" required>
-      <option value="">(valitse)</option>
-    {% for option in all_classes[class] %}
-      <option value="{{ class }}">{{ option }}</option>
-    {% endfor %}
-    </select>
-  </p>
-  {% endfor %}
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="submit" value="Luo hanke" />
-</form>
+  <h2>Luo hanke</h2>
+  <form action="/create-project" method="post">
+    <p>
+      <label for="title">Otsikko:</label><br/>
+      <input type="text" name="title" id="title" maxlength="50" required/>
+    </p>
+    <p>
+      <label for="description">Kuvaus</label>: <br/>
+      <textarea name="description" id="description" rows="8" cols="60" maxlength="1000" required></textarea>
+    </p>
+      <p>
+        <label for="class">Luokka</label>: <br/>
+        <select name="class" id="class" required>
+          <option value="">(valitse)</option>
+        {% for class in all_classes %}
+          <option value="{{ class }}">{{ all_classes[class] }}</option>
+        {% endfor %}
+        </select>
+      </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"/>
+    <input type="submit" value="Luo hanke"/>
+  </form>
 {% endblock %}

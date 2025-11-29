@@ -14,9 +14,7 @@ app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 
 def check_csrf():
-    if "csrf_token" not in request.form:
-        abort(403)
-    if request.form["csrf_token"] != session["csrf_token"]:
+    if "csrf_token" not in request.form or request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
 def require_login():
@@ -41,8 +39,8 @@ def login():
             session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         flash("VIRHE: virheellinen tunnus tai salasana")
-        return redirect("/login")
-    return render_template("login.html")
+        return redirect("/")
+    return render_template("index.html")
 
 @app.route("/logout")
 def logout():
@@ -58,7 +56,7 @@ def logout():
 def register():
     return render_template("register_user.html")
 
-@app.route("/create_user", methods=["POST"])
+@app.route("/create-user", methods=["POST"])
 def create_user():
     username = request.form["username"]
     password = request.form["password"]
@@ -82,7 +80,7 @@ def show_user(user_id):
         abort(404)
     return render_template("show_user.html", user=user)
 
-@app.route("/find_user")
+@app.route("/find-user")
 def find_user():
     require_login()
     query = request.args.get("query")
@@ -93,13 +91,13 @@ def find_user():
         results = []
     return render_template("find_user.html", query=query, results=results)
 
-@app.route("/new_project")
+@app.route("/new-project")
 def new_project():
     require_login()
     all_classes = classes.get_all_classes('Hanke')
     return render_template("new_project.html", all_classes=all_classes)
 
-@app.route("/create_project", methods=["POST"])
+@app.route("/create-project", methods=["POST"])
 def create_project():
     require_login()
     check_csrf()
@@ -113,14 +111,12 @@ def create_project():
 
     class_id = int(request.form["class"])
     all_classes = classes.get_all_classes('Hanke').keys()
-    if not all_classes   or len(all_classes) < 1:
-        abort(404)
     if class_id not in all_classes:
         abort(400)
     project_id = projects.add_project(title, description, session["user_id"], class_id)
     if not project_id:
         flash("VIRHE: hanketta ei voitu luoda")
-        return redirect("/new_project")
+        return redirect("/new-project")
     return redirect("/project/" + str(project_id))
 
 @app.route("/project/<int:project_id>")
@@ -133,8 +129,8 @@ def show_project(project_id):
     return render_template("show_project.html", project=project,
                            class_value = class_value[0]["value"])
 
-@app.route("/find_project")
-def find_project():
+@app.route("/find-project")
+def find_projects():
     require_login()
     query = request.args.get("query")
     if query:
@@ -144,7 +140,7 @@ def find_project():
         results = []
     return render_template("find_project.html", query=query, results=results)
 
-@app.route("/edit_project/<int:project_id>")
+@app.route("/edit-project/<int:project_id>")
 def edit_project(project_id):
     require_login()
     project = projects.get_project(project_id)
@@ -153,7 +149,7 @@ def edit_project(project_id):
     return render_template("edit_project.html", project=project)
 
 
-@app.route("/update_project", methods=["POST"])
+@app.route("/update-project", methods=["POST"])
 def update_project():
     require_login()
     check_csrf()
@@ -171,7 +167,7 @@ def update_project():
     projects.update_project(project_id, title, description)
     return redirect("/project/" + str(project_id))
 
-@app.route("/remove_project/<int:project_id>", methods=["GET", "POST"])
+@app.route("/remove-project/<int:project_id>", methods=["GET", "POST"])
 def remove_project(project_id):
     require_login()
     project = projects.get_project(project_id)
@@ -185,28 +181,53 @@ def remove_project(project_id):
         return redirect("/project/" + str(project_id))
     return render_template("remove_project.html", project=project)
 
-@app.route("/new_item")
-def new_item():
+@app.route("/find-projects-items")
+def find_projects_items():
     require_login()
-    return render_template("new_item.html")
+    query = request.args.get("query")
+    if query:
+        results = projects.find_projects_items(query)
+    else:
+        query = ""
+        results = []
+    return render_template("find_projects_items.html", query=query, results=results)
 
-@app.route("/create_item", methods=["POST"])
+@app.route("/project/<int:project_id>/new-item")
+def new_item(project_id):
+    require_login()
+    project = projects.get_project(project_id)
+    if not project:
+        abort(404)
+    all_classes = classes.get_all_classes('Luokka')
+    return render_template("new_item.html", project=project, all_classes=all_classes)
+
+@app.route("/create-item", methods=["POST"])
 def create_item():
     require_login()
     check_csrf()
 
+    project_id = request.form["project_id"]
+    if not project_id:
+        abort(400)
     title = request.form["title"]
     if not title or len(title) > 50:
         abort(400)
     description = request.form["description"]
     if not description or len(description) > 1000:
         abort(400)
-    items.add_item(title, description)
-    item_id = db.last_insert_id()
-    return redirect("/item/" + str(item_id))
 
-@app.route("/find_item")
-def find_item():
+    class_id = int(request.form["class"])
+    all_classes = classes.get_all_classes('Luokka').keys()
+    if class_id not in all_classes:
+        abort(400)
+    item_id = items.add_item(title, description, session["user_id"], class_id, project_id)
+    if not item_id:
+        flash("VIRHE: kohdetta ei voitu luoda")
+        return redirect("/project/" + str(project_id) + "/new-item")
+    return redirect("/project/" + str(project_id) + "/item/" + str(item_id))
+
+@app.route("/find-item")
+def find_items():
     require_login()
     query = request.args.get("query")
     if query:
@@ -216,15 +237,16 @@ def find_item():
         results = []
     return render_template("find_item.html", query=query, results=results)
 
-@app.route("/item/<int:item_id>")
-def show_item(item_id):
+@app.route("/project/<int:project_id>/item/<int:item_id>")
+def show_item(item_id, project_id):
     require_login()
     item = items.get_item(item_id)
     if not item:
         abort(404)
-    return render_template("show_item.html", item=item)
+    class_value = classes.get_class_value(item["type"])
+    return render_template("show_item.html", item=item, class_value = class_value[0]["value"])
 
-@app.route("/edit_item/<int:item_id>")
+@app.route("/edit-item/<int:item_id>")
 def edit_item(item_id):
     require_login()
     item = items.get_item(item_id)
@@ -232,7 +254,7 @@ def edit_item(item_id):
         abort(404)
     return render_template("edit_item.html", item=item)
 
-@app.route("/update_item", methods=["POST"])
+@app.route("/update-item", methods=["POST"])
 def update_item():
     require_login()
     check_csrf()
@@ -248,9 +270,9 @@ def update_item():
     if not description or len(description) > 1000:
         abort(400)
     items.update_item(item_id, title, description)
-    return redirect("/item/" + str(item_id))
+    return redirect("/project/" + str(item["project_id"]) + "/item/" + str(item_id))
 
-@app.route("/remove_item/<int:item_id>", methods=["GET", "POST"])
+@app.route("/remove-item/<int:item_id>", methods=["GET", "POST"])
 def remove_item(item_id):
     require_login()
     item = items.get_item(item_id)
@@ -261,5 +283,5 @@ def remove_item(item_id):
         if "remove" in request.form:
             items.remove_item(item_id)
             return redirect("/")
-        return redirect("/item/" + str(item_id))
+        return redirect("/project/" + str(item["project_id"]) + "/item/" + str(item_id))
     return render_template("remove_item.html", item=item)

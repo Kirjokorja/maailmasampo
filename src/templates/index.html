@@ -4,8 +4,20 @@
 
 {% block content %}
 
-<h2>Ohjeet</h2>
-<p>
-    Luo tunnus ja kirjaudu siään, jotta pääset mylläämään.
-</p>
+    {% if session.user_id %}
+
+        <h2>Haku</h2>
+
+        <form action="/find-projects-items" method="get">
+            <p>
+            <label for="query">Hakusana</label>:
+            <input type="text" name="query" id="query" value="{{ query }}">
+            </p>
+            <input type="submit" value="Lähetä">
+        </form>
+    {% endif %}
+    <h2>Ohjeet</h2>
+    <p>
+        Luo tunnus ja kirjaudu siään, jotta pääset mylläämään.
+    </p>
 {% endblock %}

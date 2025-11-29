@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}Kohdehaku{% endblock %}
+
+{% block content %}
+    <h2>Haku</h2>
+
+    <form action="/find-projects-items" method="get">
+        <p>
+        <label for="query">Hakusana</label>:
+        <input type="text" name="query" id="query" value="{{ query }}">
+        </p>
+        <input type="submit" value="Lähetä">
+    </form>
+
+    {% if query %}
+        <h3>Tulokset</h3>
+        <ul>
+        {% for item in results %}
+            {% if item.type == "Hanke" %}
+                <li><a href="/project/{{ item.id }}">{{ item.title }}</a></li>
+            {% else %}
+                <li><a href="/project/{{item.project_id}}/item/{{ item.id }}">{{ item.title }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

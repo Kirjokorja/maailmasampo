@@ -1,53 +1,51 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>{% block title %}{% endblock %}</title>
-</head>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+  </head>
 
-<body>
-  <h1>Maailmasampo</h1>
+  <body>
+    <h1>Maailmasampo</h1>
 
-  {% if session.user_id %}
-  <p>
-    Olet kirjautunut nimellä <a href="/user/{{ session.user_id }}">{{ session.username }}</a>
-  </p>
-  {% else %}
-  <h2>Kirjaudu sisään</h2>
+    {% if session.user_id %}
+      <p>
+        Olet kirjautunut nimellä <a href="/user/{{ session.user_id }}">{{ session.username }}</a>
+      </p>
+    {% else %}
+      <h2>Kirjaudu sisään</h2>
 
-  <form action="/login" method="post">
+      <form action="/login" method="post">
+        <p>
+          <label for="username">Tunnus</label>: <br />
+          <input type="text" name="username" id="username" />
+        </p>
+        <p>
+          <label for="password">Salasana</label>: <br />
+          <input type="password" name="password" id="password" />
+        </p>
+        <input type="submit" value="Kirjaudu" />
+      </form>
+    {% endif %}
+    
     <p>
-      <label for="username">Tunnus</label>: <br />
-      <input type="text" name="username" id="username" />
-    </p>
-    <p>
-      <label for="password">Salasana</label>: <br />
-      <input type="password" name="password" id="password" />
-    </p>
-    <input type="submit" value="Kirjaudu" />
-  </form>
-  {% endif %}
-  
-  <p>
-    <a href="/">Etusivu</a> |
-  {% if session.user_id %}
-    <a href="/find_project">Hae hanketta</a> |
-    <a href="/find_item">Hae kohdetta</a> |
-    <a href="/new_project">Luo hanke</a> |
-    <a href="/new_item">Luo kohde</a> |
-    <a href="/find_user">Käyttäjät</a> |
-    <a href="/logout">Kirjaudu ulos</a>
-  {% else %}
-    <a href="/login">Kirjaudu sisään</a> |
-    <a href="/register">Luo tunnus</a>
-  {% endif %}
-  </p>
+      <a href="/">Etusivu</a> |
+      {% if session.user_id %}
+        <a href="/new-project">Luo hanke</a> |
+        <a href="/new-item">Luo kohde</a> |
+        <a href="/find-user">Käyttäjät</a> |
+        <a href="/logout">Kirjaudu ulos</a>
 
-  {% for message in get_flashed_messages() %}
-    {{ message }}
-  {% endfor %}
+      {% else %}
+        <a href="/register">Luo tunnus</a>
+      {% endif %}
+    </p>
 
-  {% block content %}{% endblock %}  
-</body>
+    {% for message in get_flashed_messages() %}
+      {{ message }}
+    {% endfor %}
+
+    {% block content %}{% endblock %}  
+  </body>
 
 </html>
