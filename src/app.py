@@ -2,7 +2,6 @@ import secrets
 from flask import Flask
 from flask import abort, flash, redirect, render_template, request, session
 
-import db
 import config
 import classes
 import users
@@ -244,7 +243,8 @@ def show_item(item_id, project_id):
     if not item:
         abort(404)
     class_value = classes.get_class_value(item["type"])
-    return render_template("show_item.html", item=item, class_value = class_value[0]["value"])
+    return render_template("show_item.html", item=item,
+                           class_value = class_value[0]["value"], project_id = project_id)
 
 @app.route("/edit-item/<int:item_id>")
 def edit_item(item_id):

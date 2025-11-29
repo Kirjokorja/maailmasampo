@@ -12,7 +12,9 @@ def add_item(title, description, user_id, class_id, project_id):
     con.execute("BEGIN")
     result = con.execute(sql_items, [title, class_id, description, project_id])
     new_item_id = result.lastrowid
-    comment = f"Kohteen tunnus tietokannassa: {new_item_id}\nKohteen nimi: {title}\nLuotu hankkeeseen: {project_id}\nLuonut: {user["username"]}"
+    comment = f"Kohteen tunnus tietokannassa: {new_item_id}\n\
+                Kohteen nimi: {title}\n\
+                Luotu hankkeeseen: {project_id}\nLuonut: {user["username"]}"
     con.execute(sql_log, [user_id, action_id, new_item_id, comment])
     con.execute("COMMIT")
     con.close()
