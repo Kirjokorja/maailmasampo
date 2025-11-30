@@ -88,6 +88,12 @@ flask run
 **Jos käytät `Windows`-käyttöjärjestelmää, joudut todennäköisesti käyttämään `Windows`-komentokuorta `PowerShell 7`:n komentokuoren sijaan.
 En ole itse löytänyt komentomuotoa, jolla `sqlite3`:n komennot toimisivat `PowerShell 7`:llä.
 
+## Toisen sovituksen toiminta
+
+1. käyttäjän sivulla on listattu käyttäjän lisäämät tietokohteet
+2. Hankkeiden ja kohteiden haku on yhdistetty.
+3. Käyttäjän sivulta puuttuvat käyttäjän omistamat hankkeet.
+
 ## Ensimmäisen sovituksen toiminta
 
 1. Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
