@@ -21,14 +21,18 @@
             <th>Tunnusluku</th>
             <th>Nimimerkki</th>
             <th>Luotu</th>
+            <th>Omistamien hankkeitten määrä</th>
+            <th>Luotujen kohteitten määrä</th>
         </tr>
     </thead>
     <tbody></tbody>
         {% for user in results %}
         <tr>
             <td><a href="/user/{{user.id}}">{{user.id}}</a></td>
-            <td>{{user.username}}</td>
+            <td><a href="/user/{{user.id}}">{{user.username}}</a></td>
             <td>{{user.created}}</td>
+            <td>{{user.projects_owned}}</td>
+            <td>{{user.number_of_items}}</td>
         </tr>
         {% endfor %}
     </tbody>

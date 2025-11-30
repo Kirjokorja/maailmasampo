@@ -39,22 +39,32 @@ def check_login(username, password):
 def get_user(user_id):
     sql = """SELECT Users.id,
                     Users.username,
-                    datetime(Log_users.time, 'localtime') created
-            FROM Users, Log_users
+                    datetime(Log_users.time, 'localtime') created,
+                    count(Projects.id) projects_owned,
+                    count(Log_items.id) number_of_items
+            FROM Users, Log_users, Projects, Log_items
             WHERE Users.id = Log_users.actor
             AND Log_users.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
+            AND Projects.owner = ?
+            AND Log_items.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
             AND Users.id = ?"""
-    result = db.query(sql, ["Käyttäjätoiminto", "käyttäjän luominen", user_id])
+    result = db.query(sql, ["Käyttäjätoiminto", "käyttäjän luominen", user_id,
+                            'Tietokohdetoiminto', 'tietokohteen luominen', user_id])
     return result[0] if result else None
 
 def find_users(query):
     sql = """SELECT Users.id,
-                    Users.username, 
-                    datetime(Log_users.time, 'localtime') created 
-            FROM Users, Log_users
+                    Users.username,
+                    datetime(Log_users.time, 'localtime') created,
+                    count(Projects.id) projects_owned,
+                    count(Log_items.id) number_of_items
+            FROM Users, Log_users, Projects, Log_items
             WHERE Users.id = Log_users.actor 
-            AND Log_users.action = (SELECT id FROM Classes WHERE title = ? AND value = ?) 
+            AND Log_users.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
+            AND Projects.owner = Users.id
+            AND Log_items.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
             AND Users.username LIKE ?
             ORDER BY Users.username DESC"""
     like = "%" + query + "%"
-    return db.query(sql, ["Käyttäjätoiminto", "käyttäjän luominen", like])
+    return db.query(sql, ["Käyttäjätoiminto", "käyttäjän luominen",
+                          'Tietokohdetoiminto', 'tietokohteen luominen', like])
