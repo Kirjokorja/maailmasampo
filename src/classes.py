@@ -10,8 +10,8 @@ def get_all_classes(class_title):
         classes[class_id] = class_value
     return classes
 
-def get_class_value(class_id):
-    sql = """SELECT id, value FROM Classes
+def get_class(class_id):
+    sql = """SELECT id, title, value FROM Classes
             WHERE id = ?"""
     result = db.query(sql, [class_id])
     return result

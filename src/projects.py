@@ -3,7 +3,7 @@ import classes
 import users
 
 def add_project(title, description, user_id, class_id):
-    action_id = classes.get_class('Hanketoiminto','hankkeen luominen')
+    action_id = classes.get_class_id('Hanketoiminto','hankkeen luominen')
     sql_projects = """INSERT INTO Projects (title, type, description, owner)
                     VALUES (?, ?, ?, ?)"""
     sql_log = "INSERT INTO Log_projects (actor, action, project_id, comment) VALUES (?, ?, ?, ?)"
@@ -47,7 +47,7 @@ def remove_project(project_id):
     db.execute(sql, [project_id])
 
 def find_projects(query):
-    sql = """SELECT id, 
+    sql = """SELECT id,
                     title, 
                     description, 
                     datetime(Log_projects.time, 'localtime') created
@@ -97,4 +97,5 @@ def find_projects_items(query):
              AND Log_items.actor = Users.id
              ORDER BY title DESC"""
     like = "%" + query + "%"
-    return db.query(sql, [like, like, 'Hanketoiminto', 'hankkeen luominen', like, like, 'Tietokohdetoiminto', 'tietokohteen luominen'])
+    return db.query(sql, [like, like, 'Hanketoiminto', 'hankkeen luominen',
+                          like, like, 'Tietokohdetoiminto', 'tietokohteen luominen'])

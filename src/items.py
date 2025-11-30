@@ -3,7 +3,7 @@ import classes
 import users
 
 def add_item(title, description, user_id, class_id, project_id):
-    action_id = classes.get_class('Tietokohdetoiminto','tietokohteen luominen')
+    action_id = classes.get_class_id('Tietokohdetoiminto','tietokohteen luominen')
     sql_items = """INSERT INTO Items (title, type, description, project)
                     VALUES (?, ?, ?, ?)"""
     sql_log = "INSERT INTO Log_items (actor, action, item_id, comment) VALUES (?, ?, ?, ?)"

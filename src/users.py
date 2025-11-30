@@ -15,7 +15,7 @@ def create_user(username, password):
     if user_check:
         raise exceptions.UserAlreadyExists(f"Database found user {user_check[0]}.")
     password_hash = generate_password_hash(password)
-    action_id = classes.get_class('Käyttäjätoiminto', 'käyttäjän luominen')
+    action_id = classes.get_class_id('Käyttäjätoiminto', 'käyttäjän luominen')
     sql_users = "INSERT INTO Users (username, password_hash) VALUES (?, ?)"
     sql_log = "INSERT INTO Log_users (actor, action) VALUES (?, ?)"
     con = db.get_connection()

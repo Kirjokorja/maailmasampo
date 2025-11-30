@@ -124,8 +124,6 @@ def show_project(project_id):
     project = projects.get_project(project_id)
     if not project:
         abort(404)
-    # class_value = classes.get_class_value(project["type"])
-    # print(class_value)
     return render_template("show_project.html", project=project)
 
 @app.route("/find-project")
