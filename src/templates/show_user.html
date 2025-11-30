@@ -11,8 +11,6 @@
   <h2>Käyttäjä {{ user.username }}</h2>
   <p>
     Luotu: {{ user.created}}<br>
-    Omistamien hankkeitten lukumäärä: {{user.projects_owned}}<br>
-    Luotujen kohteiden lukumäärä: {{user.number_of_items}}
   </p>
   <hr />
   {% for item in user_items %}
