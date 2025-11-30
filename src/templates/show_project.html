@@ -13,6 +13,7 @@
     Kuvaus: {{ project.description }}<br>
     Luokka: {{ project.type_value }}<br>
     Haltija: <a href="/user/{{ project.owner_id }}">{{ project.owner_name }}</a><br>
-    Luotu: {{project.created}}
+    Luotu: {{project.created}}<br>
+    Sisältää kohteita: {{project.number_of_items}}
   </p>
 {% endblock %}

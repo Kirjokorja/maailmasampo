@@ -27,13 +27,15 @@ def get_project(project_id):
                     Projects.description,
                     Users.id owner_id,
                     Users.username owner_name,
-                    datetime(Log_projects.time, 'localtime') created
-             FROM Projects, Users, Log_projects, Classes
+                    datetime(Log_projects.time, 'localtime') created,
+                    count(Items.id) number_of_items
+             FROM Projects, Users, Log_projects, Classes, Items
              WHERE Users.id = Projects.owner AND Projects.id = ?
              AND Projects.id = Log_projects.project_id
              AND Classes.id = Projects.type
-             AND Log_projects.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)"""
-    result = db.query(sql, [project_id, 'Hanketoiminto', 'hankkeen luominen'])
+             AND Log_projects.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
+             AND Items.project = ?"""
+    result = db.query(sql, [project_id, 'Hanketoiminto', 'hankkeen luominen', project_id])
     return result[0] if result else None
 
 def update_project(project_id, title, description):
