@@ -92,7 +92,8 @@ En ole itse löytänyt komentomuotoa, jolla `sqlite3`:n komennot toimisivat `Pow
 
 1. käyttäjän sivulla on listattu käyttäjän lisäämät tietokohteet
 2. Hankkeiden ja kohteiden haku on yhdistetty.
-3. Käyttäjän sivulta puuttuvat käyttäjän omistamat hankkeet.
+
+- Käyttäjän sivulta puuttuvat vielä käyttäjän omistamat hankkeet.
 
 ## Ensimmäisen sovituksen toiminta
 
