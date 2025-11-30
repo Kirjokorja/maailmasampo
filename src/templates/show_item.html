@@ -11,7 +11,9 @@
   </p>
   <p>
     Kuvaus: {{ item.description }}<br>
-    Luokka: {{ item.type }}<br>
-    Hanke: <a href="/project/{{ item.project_id }}">{{ item.project_name }}</a>
+    Luokka: {{ item.type_value }}<br>
+    Hanke: <a href="/project/{{ project_id }}">{{ item.project_name }}</a><br>
+    Luotu: {{item.created}}<br>
+    Luonut: <a href="/user/{{item.creator_id}}">{{item.creator}}</a>
   </p>
 {% endblock %}

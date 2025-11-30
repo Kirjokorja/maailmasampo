@@ -23,13 +23,20 @@ def add_item(title, description, user_id, class_id, project_id):
 def get_item(item_id):
     sql = """SELECT Items.id,
                     Items.title,
-                    Items.type,
+                    Classes.value type_value,
                     Items.description,
                     Items.project project_id,
-                    Projects.title project_name
-             FROM Items, Projects
-             WHERE Items.id = ? AND Items.project = Projects.id"""
-    result = db.query(sql, [item_id])
+                    Projects.title project_name,
+                    Users.id creator_id,
+                    Users.username creator,
+                    datetime(Log_items.time, 'localtime') created
+             FROM Items, Projects, Log_items, Classes, Users
+             WHERE Items.id = ? AND Items.project = Projects.id
+             AND Items.type = Classes.id
+             AND Items.id = Log_items.item_id
+             AND Log_items.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
+             AND Log_items.actor = Users.id"""
+    result = db.query(sql, [item_id, 'Tietokohdetoiminto', 'tietokohteen luominen'])
     return result[0] if result else None
 
 def update_item(item_id, title, description):

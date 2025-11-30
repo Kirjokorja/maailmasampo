@@ -31,7 +31,7 @@ def login():
         password = request.form["password"]
         user_id = users.check_login(username, password)
         if user_id:
-            action_id = classes.get_class('Käyttäjätoiminto', 'sisäänkirjautuminen')
+            action_id = classes.get_class_id('Käyttäjätoiminto', 'sisäänkirjautuminen')
             users.log_user(user_id, action_id)
             session["user_id"] = user_id
             session["username"] = username
@@ -47,7 +47,7 @@ def logout():
         user_id = session["user_id"]
         del session["user_id"]
         del session["username"]
-        action_id = classes.get_class('Käyttäjätoiminto', 'uloskirjautuminen')
+        action_id = classes.get_class_id('Käyttäjätoiminto', 'uloskirjautuminen')
         users.log_user(user_id, action_id)
     return redirect("/")
 
@@ -124,9 +124,9 @@ def show_project(project_id):
     project = projects.get_project(project_id)
     if not project:
         abort(404)
-    class_value = classes.get_class_value(project["type"])
-    return render_template("show_project.html", project=project,
-                           class_value = class_value[0]["value"])
+    # class_value = classes.get_class_value(project["type"])
+    # print(class_value)
+    return render_template("show_project.html", project=project)
 
 @app.route("/find-project")
 def find_projects():
@@ -242,9 +242,7 @@ def show_item(item_id, project_id):
     item = items.get_item(item_id)
     if not item:
         abort(404)
-    class_value = classes.get_class_value(item["type"])
-    return render_template("show_item.html", item=item,
-                           class_value = class_value[0]["value"], project_id = project_id)
+    return render_template("show_item.html", item=item, project_id = project_id)
 
 @app.route("/edit-item/<int:item_id>")
 def edit_item(item_id):

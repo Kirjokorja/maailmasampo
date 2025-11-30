@@ -11,7 +11,8 @@
   </p>
   <p>
     Kuvaus: {{ project.description }}<br>
-    Luokka: {{ class_value }}<br>
-    Haltija: <a href="/user/{{ project.owner_id }}">{{ project.owner_name }}</a>
+    Luokka: {{ project.type_value }}<br>
+    Haltija: <a href="/user/{{ project.owner_id }}">{{ project.owner_name }}</a><br>
+    Luotu: {{project.created}}
   </p>
 {% endblock %}

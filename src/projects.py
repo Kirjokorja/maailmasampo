@@ -23,13 +23,17 @@ def add_project(title, description, user_id, class_id):
 def get_project(project_id):
     sql = """SELECT Projects.id,
                     Projects.title,
-                    Projects.type,
+                    Classes.value type_value,
                     Projects.description,
                     Users.id owner_id,
-                    Users.username owner_name
-             FROM Projects, Users
-             WHERE Users.id = Projects.owner AND Projects.id = ?"""
-    result = db.query(sql, [project_id])
+                    Users.username owner_name,
+                    datetime(Log_projects.time, 'localtime') created
+             FROM Projects, Users, Log_projects, Classes
+             WHERE Users.id = Projects.owner AND Projects.id = ?
+             AND Projects.id = Log_projects.project_id
+             AND Classes.id = Projects.type
+             AND Log_projects.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)"""
+    result = db.query(sql, [project_id, 'Hanketoiminto', 'hankkeen luominen'])
     return result[0] if result else None
 
 def update_project(project_id, title, description):
@@ -43,12 +47,17 @@ def remove_project(project_id):
     db.execute(sql, [project_id])
 
 def find_projects(query):
-    sql = """SELECT id, title, description
-             FROM Projects
-             WHERE title LIKE ? OR description LIKE ?
+    sql = """SELECT id, 
+                    title, 
+                    description, 
+                    datetime(Log_projects.time, 'localtime') created
+             FROM Projects, Log_projects
+             WHERE (title LIKE ? OR description LIKE ?)
+             AND Projects.id = Log_projects.project_id
+             AND Log_projects.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
              ORDER BY id DESC"""
     like = "%" + query + "%"
-    return db.query(sql, [like, like])
+    return db.query(sql, [like, like, 'Hanketoiminto', 'hankkeen luominen'])
 
 def get_project_log(project_id):
     sql = "SELECT * FROM Log_projects WHERE project_id = ?"
@@ -56,24 +65,36 @@ def get_project_log(project_id):
 
 def find_projects_items(query):
     sql = """SELECT Projects.id id,
-             Projects.title title,
-             Projects.description description,
-             Classes.title type,
-             Classes.value type_value,
-             Projects.id project_id
-             FROM Projects, Classes
+                    Projects.title title,
+                    Projects.description description,
+                    Classes.title type,
+                    Classes.value type_value,
+                    Projects.id project_id,
+                    Users.id owner_id,
+                    Users.username owner_name,
+                    datetime(Log_projects.time, 'localtime') created
+             FROM Projects, Classes, Log_projects, Users
              WHERE (Projects.title LIKE ? OR Projects.description LIKE ?)
+             AND Users.id = Projects.owner
              AND Projects.type = Classes.id
+             AND Projects.id = Log_projects.project_id
+             AND Log_projects.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
              UNION
              SELECT Items.id id,
-             Items.title title,
-             Items.description description,
-             Classes.title type,
-             Classes.value type_value,
-             Items.project project_id
-             FROM Items, Classes
+                    Items.title title,
+                    Items.description description,
+                    Classes.title type,
+                    Classes.value type_value,
+                    Items.project project_id,
+                    Users.id owner_id,
+                    Users.username owner_name,
+                    datetime(Log_items.time, 'localtime') created
+             FROM Items, Classes, Log_items, Users
              WHERE (Items.title LIKE ? OR Items.description LIKE ?)
              AND Items.type = Classes.id
+             AND Items.id = Log_items.item_id
+             AND Log_items.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
+             AND Log_items.actor = Users.id
              ORDER BY title DESC"""
     like = "%" + query + "%"
-    return db.query(sql, [like, like, like, like])
+    return db.query(sql, [like, like, 'Hanketoiminto', 'hankkeen luominen', like, like, 'Tietokohdetoiminto', 'tietokohteen luominen'])
