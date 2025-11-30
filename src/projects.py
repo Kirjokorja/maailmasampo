@@ -30,7 +30,8 @@ def get_project(project_id):
                     datetime(Log_projects.time, 'localtime') created,
                     count(Items.id) number_of_items
              FROM Projects, Users, Log_projects, Classes, Items
-             WHERE Users.id = Projects.owner AND Projects.id = ?
+             WHERE Users.id = Projects.owner 
+             AND Projects.id = ?
              AND Projects.id = Log_projects.project_id
              AND Classes.id = Projects.type
              AND Log_projects.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)

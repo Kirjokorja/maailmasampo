@@ -24,14 +24,15 @@ def get_item(item_id):
     sql = """SELECT Items.id,
                     Items.title,
                     Classes.value type_value,
-                    Items.description,
                     Items.project project_id,
+                    Items.description,   
                     Projects.title project_name,
                     Users.id creator_id,
                     Users.username creator,
                     datetime(Log_items.time, 'localtime') created
              FROM Items, Projects, Log_items, Classes, Users
-             WHERE Items.id = ? AND Items.project = Projects.id
+             WHERE Items.id = ? 
+             AND Items.project = Projects.id
              AND Items.type = Classes.id
              AND Items.id = Log_items.item_id
              AND Log_items.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
@@ -50,8 +51,7 @@ def remove_item(item_id):
     db.execute(sql, [item_id])
 
 def find_items(query):
-    sql = """
-             SELECT id, title, description
+    sql = """SELECT id, title, description
              FROM Items
              WHERE title LIKE ? OR description LIKE ?
              ORDER BY id DESC"""

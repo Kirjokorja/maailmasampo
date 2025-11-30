@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
-{% block title %}Hankkeen luonti{% endblock %}
+{% block title %}Maailmanluonti{% endblock %}
 
 {% block content %}
-  <h2>Luo hanke</h2>
+  <h2>Luo maailma</h2>
   <form action="/create-project" method="post">
     <p>
       <label for="title">Otsikko:</label><br/>
@@ -13,15 +13,15 @@
       <label for="description">Kuvaus</label>: <br/>
       <textarea name="description" id="description" rows="8" cols="60" maxlength="1000" required></textarea>
     </p>
-      <p>
-        <label for="class">Luokka</label>: <br/>
-        <select name="class" id="class" required>
-          <option value="">(valitse)</option>
-        {% for class in all_classes %}
-          <option value="{{ class }}">{{ all_classes[class] }}</option>
-        {% endfor %}
-        </select>
-      </p>
+    <p>
+      <label for="class">Luokka</label>: <br/>
+      <select name="class" id="class" required>
+        <option value="">(valitse)</option>
+      {% for class in all_classes %}
+        <option value="{{ class }}">{{ all_classes[class] }}</option>
+      {% endfor %}
+      </select>
+    </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"/>
     <input type="submit" value="Luo hanke"/>
   </form>

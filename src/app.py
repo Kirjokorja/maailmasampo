@@ -75,9 +75,10 @@ def create_user():
 def show_user(user_id):
     require_login()
     user = users.get_user(user_id)
+    user_items = users.get_user_items(user_id)
     if not user:
         abort(404)
-    return render_template("show_user.html", user=user)
+    return render_template("show_user.html", user=user, user_items=user_items)
 
 @app.route("/find-user")
 def find_user():

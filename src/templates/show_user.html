@@ -3,10 +3,37 @@
 {% block title %}Käyttäjä {{ user.username }}{% endblock %}
 
 {% block content %}
+
+  <p>
+    <a href="/find-user">Takaisin käyttäjähakuun</a>
+  </p>
+
   <h2>Käyttäjä {{ user.username }}</h2>
   <p>
     Luotu: {{ user.created}}<br>
     Omistamien hankkeitten lukumäärä: {{user.projects_owned}}<br>
     Luotujen kohteiden lukumäärä: {{user.number_of_items}}
   </p>
+  <hr />
+  {% for item in user_items %}
+    <p id="{{ item.id }}">
+      <a href="/project/{{item.project_id}}/item/{{ item.id }}">{{ item.title }}</a>
+      ({{ item.created }}):
+    </p>
+    <table>
+      <thead>
+          <tr>
+              <th>Luokka</th>
+              <th>Maailma</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td>{{ item.type_value }}</td>
+              <td><a href="/project/{{item.project_id}}">{{ item.project_name }}</a></td>
+          </tr>
+      </tbody>
+    </table>
+    <hr />
+  {% endfor %}
 {% endblock %}

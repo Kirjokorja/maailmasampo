@@ -68,3 +68,20 @@ def find_users(query):
     like = "%" + query + "%"
     return db.query(sql, ["Käyttäjätoiminto", "käyttäjän luominen",
                           'Tietokohdetoiminto', 'tietokohteen luominen', like])
+
+def get_user_items(user_id):
+    sql = """SELECT Items.id,
+                    Items.title,
+                    Classes.value type_value,
+                    Items.description,
+                    Items.project project_id,
+                    Projects.title project_name,
+                    datetime(Log_items.time, 'localtime') created
+             FROM Items, Projects, Log_items, Classes
+             WHERE Log_items.actor = ?
+             AND Items.project = Projects.id
+             AND Items.type = Classes.id
+             AND Items.id = Log_items.item_id
+             AND Log_items.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
+             ORDER BY created DESC"""
+    return db.query(sql, [user_id, 'Tietokohdetoiminto', 'tietokohteen luominen'])
