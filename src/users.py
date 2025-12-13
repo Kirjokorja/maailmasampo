@@ -19,11 +19,10 @@ def create_user(username, password):
     sql_users = "INSERT INTO Users (username, password_hash) VALUES (?, ?)"
     sql_log = "INSERT INTO Log_users (actor, action) VALUES (?, ?)"
     con = db.get_connection()
-    con.execute("BEGIN")
     result = con.execute(sql_users, [username, password_hash])
     new_user_id = result.lastrowid
     con.execute(sql_log, [new_user_id, action_id])
-    con.execute("COMMIT")
+    con.commit()
     con.close()
 
 def check_login(username, password):
@@ -55,7 +54,7 @@ def find_users(query):
             WHERE Users.id = Log_users.actor 
             AND Log_users.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
             AND Users.username LIKE ?
-            ORDER BY Users.username DESC"""
+            ORDER BY Users.id"""
     like = "%" + query + "%"
     return db.query(sql, ["Käyttäjätoiminto", "käyttäjän luominen", like])
 

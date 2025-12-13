@@ -4,3 +4,4 @@ __pycache__
 .vscode
 *.exe
 *.db
+seed.py

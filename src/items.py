@@ -1,6 +1,7 @@
 import db
 import classes
 import users
+import projects
 
 def add_item(title, description, user_id, class_id, project_id):
     action_id = classes.get_class_id('Tietokohdetoiminto','tietokohteen luominen')
@@ -8,15 +9,17 @@ def add_item(title, description, user_id, class_id, project_id):
                     VALUES (?, ?, ?, ?)"""
     sql_log = "INSERT INTO Log_items (actor, action, item_id, comment) VALUES (?, ?, ?, ?)"
     user = users.get_user(user_id)
+    project_name = projects.get_project(project_id)["title"]
     con = db.get_connection()
-    con.execute("BEGIN")
     result = con.execute(sql_items, [title, class_id, description, project_id])
     new_item_id = result.lastrowid
     comment = f"Kohteen tunnus tietokannassa: {new_item_id}\n\
                 Kohteen nimi: {title}\n\
-                Luotu hankkeeseen: {project_id}\nLuonut: {user["username"]}"
+                Luotu hankkeeseen: {project_name}\n\
+                Hankkeen tunnus: {project_id}\n\
+                Luonut: {user["username"]}"
     con.execute(sql_log, [user_id, action_id, new_item_id, comment])
-    con.execute("COMMIT")
+    con.commit()
     con.close()
     return new_item_id
 
@@ -54,6 +57,6 @@ def find_items(query):
     sql = """SELECT id, title, description
              FROM Items
              WHERE title LIKE ? OR description LIKE ?
-             ORDER BY id DESC"""
+             ORDER BY id"""
     like = "%" + query + "%"
     return db.query(sql, [like, like])

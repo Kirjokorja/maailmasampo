@@ -9,14 +9,13 @@ def add_project(title, description, user_id, class_id):
     sql_log = "INSERT INTO Log_projects (actor, action, project_id, comment) VALUES (?, ?, ?, ?)"
     user = users.get_user(user_id)
     con = db.get_connection()
-    con.execute("BEGIN")
     result = con.execute(sql_projects, [title, class_id, description, user_id])
     new_project_id = result.lastrowid
     comment = f"Hankkeen tunnus tietokannassa: {new_project_id}\n\
                 Hankkeen nimi: {title}\n\
                 Luonut: {user["username"]}"
     con.execute(sql_log, [user_id, action_id, new_project_id, comment])
-    con.execute("COMMIT")
+    con.commit()
     con.close()
     return new_project_id
 
@@ -56,7 +55,7 @@ def find_projects(query):
              WHERE (title LIKE ? OR description LIKE ?)
              AND Projects.id = Log_projects.project_id
              AND Log_projects.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
-             ORDER BY id DESC"""
+             ORDER BY id"""
     like = "%" + query + "%"
     return db.query(sql, [like, like, 'Hanketoiminto', 'hankkeen luominen'])
 
@@ -96,7 +95,7 @@ def find_projects_items(query):
              AND Items.id = Log_items.item_id
              AND Log_items.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
              AND Log_items.actor = Users.id
-             ORDER BY title DESC"""
+             ORDER BY title ASC"""
     like = "%" + query + "%"
     return db.query(sql, [like, like, 'Hanketoiminto', 'hankkeen luominen',
                           like, like, 'Tietokohdetoiminto', 'tietokohteen luominen'])
