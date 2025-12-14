@@ -88,6 +88,10 @@ flask run
 **Jos käytät `Windows`-käyttöjärjestelmää, joudut todennäköisesti käyttämään `Windows`-komentokuorta `PowerShell 7`:n komentokuoren sijaan.
 En ole itse löytänyt komentomuotoa, jolla `sqlite3`:n komennot toimisivat `PowerShell 7`:llä.
 
+## Sovelluksen testaus
+
+Ajamalla tiedoston `seed.py` voit luodaa suurehkon määrän kohteita tietokantaan testausta varten.
+
 ## Loppupalautuksen toiminta
 
 1. Sivutus on lisätty kaikkiin kyselyihin.
