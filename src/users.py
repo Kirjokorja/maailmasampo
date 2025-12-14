@@ -46,7 +46,13 @@ def get_user(user_id):
     result = db.query(sql, ["Käyttäjätoiminto", "käyttäjän luominen", user_id])
     return result[0] if result else None
 
-def find_users(query):
+def count_users(query):
+    sql = """SELECT COUNT(*) FROM Users
+                            WHERE Users.username LIKE ?"""
+    like = "%" + query + "%"
+    return db.query(sql, [like])[0][0]
+
+def find_users(query, page, page_size):
     sql = """SELECT Users.id,
                     Users.username,
                     datetime(Log_users.time, 'localtime') created
@@ -54,11 +60,30 @@ def find_users(query):
             WHERE Users.id = Log_users.actor 
             AND Log_users.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
             AND Users.username LIKE ?
-            ORDER BY Users.id"""
+            ORDER BY Users.id
+            LIMIT ? OFFSET ?"""
     like = "%" + query + "%"
-    return db.query(sql, ["Käyttäjätoiminto", "käyttäjän luominen", like])
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, ["Käyttäjätoiminto", "käyttäjän luominen", like, limit, offset])
 
-def get_user_items(user_id):
+def count_user_items(user_id):
+    sql = """SELECT COUNT(*) FROM Items, Log_items
+                            WHERE Log_items.actor = ?
+                            AND Items.id = Log_items.item_id
+                            AND Log_items.action = (SELECT id FROM Classes WHERE title = ?
+                                                    AND value = ?)"""
+    return db.query(sql, [user_id, 'Tietokohdetoiminto', 'tietokohteen luominen'])[0][0]
+
+def count_user_projects(user_id):
+    sql = """SELECT COUNT(*) FROM Projects, Log_projects
+                            WHERE Log_projects.actor = ?
+                            AND Projects.id = Log_projects.project_id
+                            AND Log_projects.action = (SELECT id FROM Classes WHERE title = ?
+                                                        AND value = ?)"""
+    return db.query(sql, [user_id, 'Hanketoiminto', 'hankkeen luominen'])[0][0]
+
+def get_user_items(user_id, page, page_size):
     sql = """SELECT Items.id,
                     Items.title,
                     Classes.value type_value,
@@ -72,5 +97,8 @@ def get_user_items(user_id):
              AND Items.type = Classes.id
              AND Items.id = Log_items.item_id
              AND Log_items.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
-             ORDER BY created DESC"""
-    return db.query(sql, [user_id, 'Tietokohdetoiminto', 'tietokohteen luominen'])
+             ORDER BY created DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [user_id, 'Tietokohdetoiminto', 'tietokohteen luominen', limit, offset])

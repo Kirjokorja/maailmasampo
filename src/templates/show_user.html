@@ -4,13 +4,28 @@
 
 {% block content %}
 
-  <p>
-    <a href="/find-user">Takaisin käyttäjähakuun</a>
-  </p>
-
   <h2>Käyttäjä {{ user.username }}</h2>
   <p>
     Luotu: {{ user.created}}<br>
+  </p>
+  <p>
+    <form action="/user/{{user.id}}" method="get">
+      <button type="submit" name="page" value="{{ 1 }}">Ensimmäinen</button>
+      <button type="submit" name="page" value="{{ page - 1 }}">&lt;</button>
+      {% for i in range(5, 0, -1) %}
+          {% if 0 < page-i %}
+              <button type="submit" name="page" value="{{ page - i }}">{{ page - i }}</button>
+          {% endif %}
+      {% endfor %}
+      {% for i in range(0, 5) %}
+          {% if page+i < page_count+1 %}
+              <button type="submit" name="page" value="{{ page + i }}">{{ page + i }}</button>
+          {% endif %}
+      {% endfor %}
+      <button type="submit" name="page" value="{{ page + 1 }}">&gt;</button>
+      <button type="submit" name="page" value="{{ page_count }}">Viimeinen</button>
+    </form>
+    <h4>Sivu {{ page }}/{{ page_count }}</h4>
   </p>
   <hr />
   {% for item in user_items %}
@@ -34,4 +49,23 @@
     </table>
     <hr />
   {% endfor %}
+  <p>
+    <h4>Sivu {{ page }}/{{ page_count }}</h4>
+    <form action="/user/{{user.id}}" method="get">
+      <button type="submit" name="page" value="{{ 1 }}">Ensimmäinen</button>
+      <button type="submit" name="page" value="{{ page - 1 }}">&lt;</button>
+      {% for i in range(5, 0, -1) %}
+          {% if 0 < page-i %}
+              <button type="submit" name="page" value="{{ page - i }}">{{ page - i }}</button>
+          {% endif %}
+      {% endfor %}
+      {% for i in range(0, 5) %}
+          {% if page+i < page_count+1 %}
+              <button type="submit" name="page" value="{{ page + i }}">{{ page + i }}</button>
+          {% endif %}
+      {% endfor %}
+      <button type="submit" name="page" value="{{ page + 1 }}">&gt;</button>
+      <button type="submit" name="page" value="{{ page_count }}">Viimeinen</button>
+    </form>
+  </p>
 {% endblock %}

@@ -1,7 +1,8 @@
 import secrets
 import math
+import time
 from flask import Flask
-from flask import abort, flash, redirect, render_template, request, session
+from flask import abort, flash, redirect, render_template, request, session, g
 
 import config
 import classes
@@ -20,6 +21,16 @@ def check_csrf():
 def require_login():
     if "user_id" not in session:
         abort(403)
+
+@app.before_request
+def before_request():
+    g.start_time = time.time()
+
+@app.after_request
+def after_request(response):
+    elapsed_time = round(time.time() - g.start_time, 2)
+    print("elapsed time:", elapsed_time, "s")
+    return response
 
 @app.route("/")
 def index():
@@ -76,21 +87,50 @@ def create_user():
 def show_user(user_id):
     require_login()
     user = users.get_user(user_id)
-    user_items = users.get_user_items(user_id)
     if not user:
         abort(404)
-    return render_template("show_user.html", user=user, user_items=user_items)
+    require_login()
+    page_size = 10
+    page_count = 0
+    page = 1
+
+    if request.args.get("page"):
+        page = int(request.args.get("page"))
+
+    user_items_count = users.count_user_items(user_id)
+    page_count = math.ceil(user_items_count/page_size)
+    page_count = max(page_count, 1)
+    page = max(page, 1)
+    page = min(page, page_count)
+    user_items = users.get_user_items(user_id, page, page_size)
+
+    return render_template("show_user.html", page=page, page_count=page_count,
+                           user=user, user_items_count=user_items_count, user_items=user_items)
 
 @app.route("/find-user")
 def find_user():
     require_login()
-    query = request.args.get("query")
+
+    page_size = 10
+    page_count = 0
     results = []
-    if query:
-        results = users.find_users(query)
-    else:
-        query = ""
-    return render_template("find_user.html", query=query, results=results)
+    query = ""
+    page = 1
+
+    if request.args.get("page"):
+        page = int(request.args.get("page"))
+
+    if request.args.get("query"):
+        query = request.args.get("query")
+        results_count = users.count_users(query)
+        page_count = math.ceil(results_count/page_size)
+        page_count = max(page_count, 1)
+        page = max(page, 1)
+        page = min(page, page_count)
+        results = users.find_users(query, page, page_size)
+
+    return render_template("find_user.html", page=page, page_count=page_count,
+                           query=query, results=results)
 
 @app.route("/new-project")
 def new_project():
@@ -184,7 +224,7 @@ def remove_project(project_id):
 def find_projects_items():
     require_login()
     page_size = 10
-    page_count = 1
+    page_count = 0
     results = []
     query = ""
     page = 1

@@ -88,9 +88,13 @@ flask run
 **Jos käytät `Windows`-käyttöjärjestelmää, joudut todennäköisesti käyttämään `Windows`-komentokuorta `PowerShell 7`:n komentokuoren sijaan.
 En ole itse löytänyt komentomuotoa, jolla `sqlite3`:n komennot toimisivat `PowerShell 7`:llä.
 
+## Loppupalautuksen toiminta
+
+1. Sivutus on lisätty kaikkiin kyselyihin.
+
 ## Toisen sovituksen toiminta
 
-1. käyttäjän sivulla on listattu käyttäjän lisäämät tietokohteet
+1. Käyttäjän sivulla on listattu käyttäjän lisäämät tietokohteet.
 2. Hankkeiden ja kohteiden haku on yhdistetty.
 
 - Käyttäjän sivulta puuttuvat vielä käyttäjän omistamat hankkeet.
