@@ -4,6 +4,26 @@
 
 {% block content %}
     {% if query %}
+        <p>
+            <form action="/find-projects-items" method="get">
+                <input type="hidden" name="query" value="{{ query }}" />
+                <button type="submit" name="page" value="{{ 1 }}">Ensimmäinen</button>
+                <button type="submit" name="page" value="{{ page - 1 }}">&lt;</button>
+                {% for i in range(3, 0, -1) %}
+                    {% if 0 < page-i %}
+                       <button type="submit" name="page" value="{{ page - i }}">{{ page - i }}</button>
+                    {% endif %}
+                {% endfor %}
+                {% for i in range(0, 3) %}
+                    {% if page+i < page_count+1 %}
+                       <button type="submit" name="page" value="{{ page + i }}">{{ page + i }}</button>
+                    {% endif %}
+                {% endfor %}
+                <button type="submit" name="page" value="{{ page + 1 }}">&gt;</button>
+                <button type="submit" name="page" value="{{ page_count }}">Viimeinen</button>
+            </form>
+            <h4>Sivu {{ page }}/{{ page_count }}</h4>
+        </p>
         <h3>Tulokset</h3>
         <ul>
         {% for item in results %}
@@ -15,11 +35,23 @@
         {% endfor %}
         </ul>
         <p>
+            <h4>Sivu {{ page }}/{{ page_count }}</h4>
             <form action="/find-projects-items" method="get">
                 <input type="hidden" name="query" value="{{ query }}" />
-                <button type="submit" name="page" value="{{ page - 1}}">&lt;&lt;</button>
-                Sivu {{ page }}/{{ page_count }}
-                <button type="submit" name="page" value="{{ page + 1}}">&gt;&gt;</button>
+                <button type="submit" name="page" value="{{ 1 }}">Ensimmäinen</button>
+                <button type="submit" name="page" value="{{ page - 1 }}">&lt;</button>
+                {% for i in range(3, 0, -1) %}
+                    {% if 0 < page-i %}
+                       <button type="submit" name="page" value="{{ page - i }}">{{ page - i }}</button>
+                    {% endif %}
+                {% endfor %}
+                {% for i in range(0, 3) %}
+                    {% if page+i < page_count+1 %}
+                       <button type="submit" name="page" value="{{ page + i }}">{{ page + i }}</button>
+                    {% endif %}
+                {% endfor %}
+                <button type="submit" name="page" value="{{ page + 1 }}">&gt;</button>
+                <button type="submit" name="page" value="{{ page_count }}">Viimeinen</button>
             </form>
         </p>
     {% endif %}
