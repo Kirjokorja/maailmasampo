@@ -9,12 +9,12 @@
                 <input type="hidden" name="query" value="{{ query }}" />
                 <button type="submit" name="page" value="{{ 1 }}">Ensimmäinen</button>
                 <button type="submit" name="page" value="{{ page - 1 }}">&lt;</button>
-                {% for i in range(3, 0, -1) %}
+                {% for i in range(5, 0, -1) %}
                     {% if 0 < page-i %}
                        <button type="submit" name="page" value="{{ page - i }}">{{ page - i }}</button>
                     {% endif %}
                 {% endfor %}
-                {% for i in range(0, 3) %}
+                {% for i in range(0, 5) %}
                     {% if page+i < page_count+1 %}
                        <button type="submit" name="page" value="{{ page + i }}">{{ page + i }}</button>
                     {% endif %}
@@ -40,12 +40,12 @@
                 <input type="hidden" name="query" value="{{ query }}" />
                 <button type="submit" name="page" value="{{ 1 }}">Ensimmäinen</button>
                 <button type="submit" name="page" value="{{ page - 1 }}">&lt;</button>
-                {% for i in range(3, 0, -1) %}
+                {% for i in range(5, 0, -1) %}
                     {% if 0 < page-i %}
                        <button type="submit" name="page" value="{{ page - i }}">{{ page - i }}</button>
                     {% endif %}
                 {% endfor %}
-                {% for i in range(0, 3) %}
+                {% for i in range(0, 5) %}
                     {% if page+i < page_count+1 %}
                        <button type="submit" name="page" value="{{ page + i }}">{{ page + i }}</button>
                     {% endif %}

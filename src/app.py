@@ -184,7 +184,7 @@ def remove_project(project_id):
 def find_projects_items():
     require_login()
     page_size = 10
-    page_count = 0
+    page_count = 1
     results = []
     query = ""
     page = 1
