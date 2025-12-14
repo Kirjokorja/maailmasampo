@@ -14,5 +14,13 @@
             {% endif %}
         {% endfor %}
         </ul>
+        <p>
+            <form action="/find-projects-items" method="get">
+                <input type="hidden" name="query" value="{{ query }}" />
+                <button type="submit" name="page" value="{{ page - 1}}">&lt;&lt;</button>
+                Sivu {{ page }}/{{ page_count }}
+                <button type="submit" name="page" value="{{ page + 1}}">&gt;&gt;</button>
+            </form>
+        </p>
     {% endif %}
 {% endblock %}

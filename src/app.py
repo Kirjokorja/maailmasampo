@@ -1,4 +1,5 @@
 import secrets
+import math
 from flask import Flask
 from flask import abort, flash, redirect, render_template, request, session
 
@@ -84,11 +85,11 @@ def show_user(user_id):
 def find_user():
     require_login()
     query = request.args.get("query")
+    results = []
     if query:
         results = users.find_users(query)
     else:
         query = ""
-        results = []
     return render_template("find_user.html", query=query, results=results)
 
 @app.route("/new-project")
@@ -131,11 +132,11 @@ def show_project(project_id):
 def find_projects():
     require_login()
     query = request.args.get("query")
+    results = []
     if query:
         results = projects.find_projects(query)
     else:
         query = ""
-        results = []
     return render_template("find_project.html", query=query, results=results)
 
 @app.route("/edit-project/<int:project_id>")
@@ -182,13 +183,26 @@ def remove_project(project_id):
 @app.route("/find-projects-items")
 def find_projects_items():
     require_login()
-    query = request.args.get("query")
-    if query:
-        results = projects.find_projects_items(query)
-    else:
-        query = ""
-        results = []
-    return render_template("find_projects_items.html", query=query, results=results)
+    page_size = 10
+    page_count = 0
+    results = []
+    query = ""
+    page = 1
+
+    if request.args.get("page"):
+        page = int(request.args.get("page"))
+
+    if request.args.get("query"):
+        query = request.args.get("query")
+        results_count = projects.count_projects_items(query)
+        page_count = math.ceil(results_count/page_size)
+        page_count = max(page_count, 1)
+        page = max(page, 1)
+        page = min(page, page_count)
+        results = projects.find_projects_items(query, page, page_size)
+
+    return render_template("find_projects_items.html", page=page, page_count=page_count,
+                           query=query, results=results)
 
 @app.route("/project/<int:project_id>/new-item")
 def new_item(project_id):
@@ -228,11 +242,11 @@ def create_item():
 def find_items():
     require_login()
     query = request.args.get("query")
+    results = []
     if query:
         results = items.find_items(query)
     else:
         query = ""
-        results = []
     return render_template("find_item.html", query=query, results=results)
 
 @app.route("/project/<int:project_id>/item/<int:item_id>")

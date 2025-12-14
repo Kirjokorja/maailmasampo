@@ -11,13 +11,18 @@ def add_project(title, description, user_id, class_id):
     con = db.get_connection()
     result = con.execute(sql_projects, [title, class_id, description, user_id])
     new_project_id = result.lastrowid
-    comment = f"Hankkeen tunnus tietokannassa: {new_project_id}\n\
-                Hankkeen nimi: {title}\n\
-                Luonut: {user["username"]}"
+    comment = create_project_log_comment(new_project_id, title, user)
     con.execute(sql_log, [user_id, action_id, new_project_id, comment])
     con.commit()
     con.close()
     return new_project_id
+
+def create_project_log_comment(project_id, title, user):
+    comment = f"Hankkeen tunnus tietokannassa: {project_id}\n\
+                Hankkeen nimi: {title}\n\
+                Luonut: {user["username"]}\n\
+                Luojan tunnus tietokannassa: {user["id"]}"
+    return comment
 
 def get_project(project_id):
     sql = """SELECT Projects.id,
@@ -63,7 +68,17 @@ def get_project_log(project_id):
     sql = "SELECT * FROM Log_projects WHERE project_id = ?"
     return db.query(sql, [project_id])
 
-def find_projects_items(query):
+def count_projects_items(query):
+    sql = """SELECT
+                (SELECT COUNT(*) FROM Projects 
+                                WHERE (Projects.title LIKE ? OR Projects.description LIKE ?))
+                +
+                (SELECT COUNT(*) FROM Items 
+                                WHERE (Items.title LIKE ? OR Items.description LIKE ?))"""
+    like = "%" + query + "%"
+    return db.query(sql, [like, like, like, like])[0][0]
+
+def find_projects_items(query, page, page_size):
     sql = """SELECT Projects.id id,
                     Projects.title title,
                     Projects.description description,
@@ -95,7 +110,10 @@ def find_projects_items(query):
              AND Items.id = Log_items.item_id
              AND Log_items.action = (SELECT id FROM Classes WHERE title = ? AND value = ?)
              AND Log_items.actor = Users.id
-             ORDER BY title ASC"""
+             ORDER BY title ASC
+             LIMIT ? OFFSET ?"""
     like = "%" + query + "%"
+    limit = page_size
+    offset = page_size * (page - 1)
     return db.query(sql, [like, like, 'Hanketoiminto', 'hankkeen luominen',
-                          like, like, 'Tietokohdetoiminto', 'tietokohteen luominen'])
+                          like, like, 'Tietokohdetoiminto', 'tietokohteen luominen', limit, offset])

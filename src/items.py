@@ -9,19 +9,24 @@ def add_item(title, description, user_id, class_id, project_id):
                     VALUES (?, ?, ?, ?)"""
     sql_log = "INSERT INTO Log_items (actor, action, item_id, comment) VALUES (?, ?, ?, ?)"
     user = users.get_user(user_id)
-    project_name = projects.get_project(project_id)["title"]
+    project = projects.get_project(project_id)
     con = db.get_connection()
-    result = con.execute(sql_items, [title, class_id, description, project_id])
+    result = con.execute(sql_items, [title, class_id, description, project])
     new_item_id = result.lastrowid
-    comment = f"Kohteen tunnus tietokannassa: {new_item_id}\n\
-                Kohteen nimi: {title}\n\
-                Luotu hankkeeseen: {project_name}\n\
-                Hankkeen tunnus: {project_id}\n\
-                Luonut: {user["username"]}"
+    comment = create_item_log_comment(new_item_id, title, project, user)
     con.execute(sql_log, [user_id, action_id, new_item_id, comment])
     con.commit()
     con.close()
     return new_item_id
+
+def create_item_log_comment(item_id, title, project, user):
+    comment = f"Kohteen tunnus tietokannassa: {item_id}\n\
+                Kohteen nimi: {title}\n\
+                Luotu hankkeeseen: {project["title"]}\n\
+                Hankkeen tunnus: {project["id"]}\n\
+                Luonut: {user["username"]}\n\
+                Luojan tunnus tietokannassa: {user["id"]}"
+    return comment
 
 def get_item(item_id):
     sql = """SELECT Items.id,
